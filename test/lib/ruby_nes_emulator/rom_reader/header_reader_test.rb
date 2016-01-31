@@ -3,7 +3,7 @@ require 'ruby_nes_emulator/rom_reader/header_reader'
 
 describe RubyNesEmulator::RomReader::HeaderReader do
   describe '#read' do
-    let :flags_bytes_reader do
+    let :flag_bytes_reader do
       Minitest::Mock.new
     end
 
@@ -37,21 +37,21 @@ describe RubyNesEmulator::RomReader::HeaderReader do
     end
 
     before do
-      flags_bytes_reader.expect(:read_flags, { flag1a: true, flag1b: false, flag2: true }, [first_flag_byte, second_flag_byte])
-      flags_bytes_reader.expect(:read_mirroring, :test_mirroring, [first_flag_byte])
-      flags_bytes_reader.expect(:read_mapper_number, 1234, [first_flag_byte, second_flag_byte])
+      flag_bytes_reader.expect(:read_flags, { flag1a: true, flag1b: false, flag2: true }, [first_flag_byte, second_flag_byte])
+      flag_bytes_reader.expect(:read_mirroring, :test_mirroring, [first_flag_byte])
+      flag_bytes_reader.expect(:read_mapper_number, 1234, [first_flag_byte, second_flag_byte])
     end
 
     subject do
       RubyNesEmulator::RomReader::HeaderReader.new(
-        flags_bytes_reader: flags_bytes_reader
+        flag_bytes_reader: flag_bytes_reader
       )
     end
 
     describe 'sunny day' do
       it 'reads metadata from header bytes' do
         _(subject.read(header_bytes)).must_equal(expected_metadata)
-        flags_bytes_reader.verify
+        flag_bytes_reader.verify
       end
     end
 
@@ -62,7 +62,7 @@ describe RubyNesEmulator::RomReader::HeaderReader do
 
       it 'assumes 8 kbs as prg ram size' do
         _(subject.read(header_bytes)).must_equal(expected_metadata.merge(prg_ram_size: 8192))
-        flags_bytes_reader.verify
+        flag_bytes_reader.verify
       end
     end
 

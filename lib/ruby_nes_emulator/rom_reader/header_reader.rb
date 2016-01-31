@@ -10,7 +10,7 @@ class RubyNesEmulator::RomReader::HeaderReader
   SECOND_FLAG_BYTE_INDEX = 7
 
   def initialize(deps)
-    @flags_bytes_reader = deps.fetch(:flags_bytes_reader)
+    @flag_bytes_reader = deps.fetch(:flag_bytes_reader)
   end
 
   def read(header_bytes)
@@ -27,14 +27,14 @@ class RubyNesEmulator::RomReader::HeaderReader
     first_flag_byte = get_byte(header_bytes, FIRST_FLAG_BYTE_INDEX)
     second_flag_byte = get_byte(header_bytes, SECOND_FLAG_BYTE_INDEX)
 
-    flags = @flags_bytes_reader.read_flags(first_flag_byte, second_flag_byte)
+    flags = @flag_bytes_reader.read_flags(first_flag_byte, second_flag_byte)
 
     {
       prg_rom_size: prg_rom_size,
       chr_rom_size: chr_rom_size,
       prg_ram_size: prg_ram_size,
-      mirroring: @flags_bytes_reader.read_mirroring(first_flag_byte),
-      mapper_number: @flags_bytes_reader.read_mapper_number(first_flag_byte, second_flag_byte)
+      mirroring: @flag_bytes_reader.read_mirroring(first_flag_byte),
+      mapper_number: @flag_bytes_reader.read_mapper_number(first_flag_byte, second_flag_byte)
     }.merge(flags)
   end
 
