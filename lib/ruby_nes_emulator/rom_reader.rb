@@ -5,7 +5,6 @@ class RubyNesEmulator::RomReader
   def initialize(deps)
     @header_reader = deps.fetch(:header_reader)
     @trainer_reader = deps.fetch(:trainer_reader)
-    @prg_rom_reader = deps.fetch(:prg_rom_reader)
     @chr_rom_reader = deps.fetch(:chr_rom_reader)
   end
 
@@ -20,8 +19,8 @@ class RubyNesEmulator::RomReader
           rom_data.merge!(trainer_data)
         end
 
-        prg_rom_data = read_rata(f, header_data.fetch(:prg_rom_size), @prg_rom_reader)
-        rom_data.merge!(prg_rom_data)
+        prg_rom_bytestring = read_rata(f, header_data.fetch(:prg_rom_size))
+        rom_data.merge!(prg_rom_bytestring: prg_rom_bytestring)
 
         chr_rom_data = read_rata(f, header_data.fetch(:chr_rom_size), @chr_rom_reader)
         rom_data.merge!(chr_rom_data)
@@ -31,8 +30,8 @@ class RubyNesEmulator::RomReader
 
   private
 
-  def read_rata(file_stream, size, reader)
-    bytes = file_stream.read(size)
-    reader.read(bytes)
+  def read_rata(file_stream, size, reader = nil)
+    bytestring = file_stream.read(size)
+    reader ? reader.read(bytestring) : bytestring
   end
 end

@@ -1,5 +1,3 @@
-require 'active_support/core_ext/integer/multiple'
-
 class RubyNesEmulator::RomReader::ChrRomReader
   TILE_DEFINITION_SIZE = 16
   TILE_PLANE_OFFSET = 8

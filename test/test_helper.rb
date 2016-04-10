@@ -1,2 +1,5 @@
 require_relative '../config/boot'
 require 'minitest/autorun'
+require 'json'
+require 'json/add/symbol'
+require 'active_support/core_ext/hash/keys'
